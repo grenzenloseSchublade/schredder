@@ -18,7 +18,7 @@ npm run dev
 
 Die App läuft unter: [http://localhost:5173/schredder/](http://localhost:5173/schredder/)
 
-> **Wichtig:** Du benötigst ein [Supabase](https://supabase.com) Projekt. Die Credentials findest du unter Project Settings → API.
+> **Wichtig:** Du benötigst ein [Supabase](https://supabase.com) Projekt. Siehe Kapitel „Supabase" für die vollständige Einrichtung.
 
 ## Tech Stack
 
@@ -63,7 +63,7 @@ Die App läuft unter: [http://localhost:5173/schredder/](http://localhost:5173/s
    cp .env.example .env.local
    ```
 
-   Bearbeite `.env.local` und füge deine Supabase-Credentials ein:
+   Bearbeite `.env.local` und füge deine Supabase-Credentials ein (siehe Kapitel „Supabase"):
 
    ```env
    VITE_SUPABASE_URL=https://your-project.supabase.co
@@ -102,21 +102,42 @@ src/
 └── types/          # TypeScript Typen
 ```
 
-## Supabase Setup
+---
+
+## Supabase
+
+Dieses Projekt nutzt [Supabase](https://supabase.com) als Backend (Auth & Database). Folgende Schritte sind für die vollständige Einrichtung erforderlich.
+
+### 1. Projekt anlegen
 
 1. Erstelle ein neues Projekt auf [supabase.com](https://supabase.com)
-2. Kopiere die Project URL und den Anon Key aus den Project Settings
-3. Füge sie in deine `.env.local` Datei ein
+2. Warte, bis das Projekt bereit ist (kann 1–2 Minuten dauern)
 
-### Warum die profiles-Tabelle und Typen-Generierung?
+### 2. Credentials abrufen
 
-Supabase speichert Nutzer in `auth.users`, aber diese Tabelle ist nicht direkt per API zugreifbar. Für zusätzliche Profildaten (Name, Avatar etc.) braucht die App deshalb eine eigene Tabelle `public.profiles`. Sie wird per Trigger automatisch befüllt, sobald sich ein Nutzer registriert.
+**Pfad:** Project Settings → API
 
-Die Datei `src/types/database.types.ts` enthält die TypeScript-Typen für alle Tabellen. Sie wird **aus dem Schema deiner Supabase-Datenbank** erzeugt – nicht manuell geschrieben. Ohne die `profiles`-Tabelle findet die Typsgenerierung keine passenden Tabellen, die generierten Typen sind leer, und der Build schlägt fehl. Deshalb müssen erst die Tabelle angelegt und anschließend die Typen neu generiert werden.
+- **Project URL** (z.B. `https://xyzabc.supabase.co`)
+- **anon public** Key (öffentlicher API-Schlüssel)
 
-### profiles-Tabelle anlegen
+Diese Werte in `.env.local` eintragen:
 
-Im Supabase-Dashboard: **SQL Editor** → **New query** → folgendes SQL ausführen:
+```env
+VITE_SUPABASE_URL=https://xyzabc.supabase.co
+VITE_SUPABASE_ANON_KEY=dein-anon-key
+
+# Optional, für Production: Basis-URL für E-Mail-Bestätigung (z.B. https://dein-user.github.io)
+# Ohne Angabe wird window.location.origin genutzt – funktioniert lokal und bei korrekter Supabase URL-Konfiguration
+# VITE_APP_URL=https://dein-user.github.io
+```
+
+### 3. profiles-Tabelle anlegen
+
+Supabase speichert Nutzer in `auth.users`, aber diese Tabelle ist nicht direkt per API zugreifbar. Für zusätzliche Profildaten (Name, Avatar etc.) braucht die App eine eigene Tabelle `public.profiles`.
+
+**Warum?** Die Datei `src/types/database.types.ts` enthält TypeScript-Typen, die aus dem Schema deiner Supabase-Datenbank generiert werden. Ohne `profiles`-Tabelle sind die generierten Typen leer, und der Build schlägt fehl.
+
+**Im Supabase-Dashboard:** SQL Editor → New query → folgendes SQL ausführen:
 
 ```sql
 create table public.profiles (
@@ -149,36 +170,105 @@ create trigger on_auth_user_created
   for each row execute procedure public.handle_new_user();
 ```
 
-Damit wird die Tabelle angelegt, RLS aktiviert, Zugriffsregeln gesetzt und ein Trigger eingerichtet, der bei jeder Registrierung automatisch ein Profil erzeugt.
+Damit wird:
+- Die Tabelle angelegt
+- Row Level Security (RLS) aktiviert
+- Zugriffsregeln gesetzt (Nutzer sehen nur eigenes Profil)
+- Ein Trigger eingerichtet, der bei Registrierung automatisch ein Profil erzeugt
 
-### URL-Konfiguration (Auth Redirects)
+### 4. URL-Konfiguration (Auth Redirects)
 
-Für E-Mail-Bestätigung und Deployment auf GitHub Pages müssen **Site URL** und **Redirect URLs** im Supabase-Dashboard gesetzt werden:
+**Kritisch für E-Mail-Bestätigung und Production-Deployment.**
+
+Bei der Registrierung sendet Supabase eine Bestätigungsmail mit einem Link. Wohin dieser Link führt, hängt von der **Site URL** und den **Redirect URLs** ab.
 
 **Pfad:** Authentication → URL Configuration
 
-- **Site URL:** `https://<dein-github-user>.github.io/schredder/` (Production-URL deiner App)
-- **Redirect URLs** (Allow list):
-  - `https://<user>.github.io/schredder/**` (Production, inkl. Hash für Auth-Token)
-  - `http://localhost:5173/schredder/**` (Lokale Entwicklung)
+#### Site URL
 
-Ohne diese Einstellung führen Bestätigungslinks in E-Mails fälschlich zu localhost statt zur produktiven App.
+Die **Site URL** ist der Standard-Redirect, wenn im Code kein `emailRedirectTo` angegeben wird oder die angegebene URL nicht erlaubt ist.
 
-### Datenbank-Typen generieren
+- **Standard:** `http://localhost:3000` (muss geändert werden!)
+- **Production:** `https://<dein-github-user>.github.io/schredder/`
 
-Die Typen werden aus deinem Supabase-Projekt automatisch generiert. Zuerst bei der Supabase CLI einloggen:
+#### Redirect URLs (Allowlist)
+
+Hier müssen alle erlaubten Redirect-Ziele eingetragen werden. Nur URLs in dieser Liste werden von Supabase akzeptiert.
+
+| URL | Zweck |
+|-----|-------|
+| `https://<user>.github.io/schredder/**` | Production (GitHub Pages) |
+| `http://localhost:5173/schredder/**` | Lokale Entwicklung (Vite) |
+
+> **Wildcard `**`:** Erlaubt alle Pfade unterhalb der Basis-URL, z.B. `.../schredder/#access_token=...`.
+
+#### Funktionsweise
+
+```
+signUp() mit emailRedirectTo
+        ↓
+URL in Allowlist? ──Ja──→ Redirect zu dieser URL
+        │
+       Nein
+        ↓
+Fallback: Site URL (z.B. localhost:3000)
+```
+
+**Ohne korrekte Konfiguration zeigen Bestätigungslinks auf localhost!**
+
+**Tipp:** Mit `VITE_APP_URL` (z.B. `https://dein-user.github.io`) kann die Redirect-URL explizit für Production gesetzt werden. In GitHub Actions sollte dieses Secret übergeben werden. Ohne `VITE_APP_URL` nutzt die App `window.location.origin` – das reicht, wenn Supabase korrekt konfiguriert ist.
+
+### 5. Datenbank-Typen generieren
+
+Die TypeScript-Typen werden aus dem Schema deiner Supabase-Datenbank generiert.
+
+**Schritt 1:** Bei der Supabase CLI einloggen:
 
 ```bash
 npx supabase login
 ```
 
-> **DevContainer / Headless:** Öffne den angezeigten Login-Link manuell und gib den Verifikationscode im Terminal ein.
+> **DevContainer / Headless:** Der Browser öffnet sich ggf. nicht automatisch. Öffne den angezeigten Login-Link manuell und gib den Verifikationscode im Terminal ein.
 
-Anschließend Typen generieren (ersetze `<your-project-id>` durch den Teil vor `.supabase.co` in deiner Supabase-URL):
+**Schritt 2:** Typen generieren (ersetze `<project-id>` durch den Teil vor `.supabase.co` in deiner URL):
 
 ```bash
-npx supabase gen types typescript --project-id <your-project-id> > src/types/database.types.ts
+npx supabase gen types typescript --project-id <project-id> > src/types/database.types.ts
 ```
+
+**Wann neu generieren?**
+- Nach Änderungen am Datenbankschema (neue Tabellen, Spalten etc.)
+- Wenn Build-Fehler wie `Type 'string' does not satisfy the constraint` auftreten
+
+### 6. Troubleshooting
+
+#### Bestätigungslink zeigt auf localhost:3000
+
+**Problem:** Nach der Registrierung enthält die Bestätigungsmail einen Link zu `http://localhost:3000/#access_token=...` statt zur produktiven App.
+
+**Ursache:** Supabase ignoriert die im Code übergebene `emailRedirectTo`-URL, wenn sie nicht in der Allowlist steht, und fällt auf die **Site URL** zurück. Der Standardwert der Site URL ist `http://localhost:3000`.
+
+**Lösung:**
+1. Im Supabase-Dashboard → Authentication → URL Configuration
+2. **Site URL** auf die Production-URL setzen (z.B. `https://<user>.github.io/schredder/`)
+3. **Redirect URLs** hinzufügen:
+   - `https://<user>.github.io/schredder/**`
+   - `http://localhost:5173/schredder/**`
+4. Änderungen speichern
+5. Neuen Nutzer registrieren und Bestätigungsmail prüfen
+
+#### Build-Fehler: „Type 'string' does not satisfy the constraint"
+
+**Problem:** TypeScript-Fehler wie `Type 'string' does not satisfy the constraint '{ schema: "public"; }'`.
+
+**Ursache:** Die generierten Typen in `database.types.ts` enthalten keine Tabellen (leeres Schema).
+
+**Lösung:**
+1. `profiles`-Tabelle in Supabase anlegen (siehe oben)
+2. Typen neu generieren: `npx supabase gen types typescript --project-id <id> > src/types/database.types.ts`
+3. Build erneut ausführen
+
+---
 
 ## DevContainer
 
@@ -194,7 +284,7 @@ Das Projekt enthält eine DevContainer-Konfiguration für VS Code. Um den DevCon
 
 Das Projekt ist für automatisches Deployment auf GitHub Pages konfiguriert.
 
-> **Supabase Auth:** Für funktionierende E-Mail-Bestätigung nach der Registrierung muss die URL-Konfiguration in Supabase (siehe oben unter „URL-Konfiguration“) auf die Production-URL gesetzt sein.
+> **Wichtig:** Für funktionierende E-Mail-Bestätigung muss die Supabase URL-Konfiguration auf die Production-URL gesetzt sein. Siehe Kapitel „Supabase" → „URL-Konfiguration".
 
 1. **Repository Settings**
    - Gehe zu Settings → Pages
@@ -204,9 +294,10 @@ Das Projekt ist für automatisches Deployment auf GitHub Pages konfiguriert.
    - Gehe zu Settings → Secrets and variables → Actions
    - Wähle **Repository secrets** (Environment secrets funktionieren ebenfalls, wenn für `github-pages` konfiguriert)
    - Klicke auf **New repository secret**
-   - Füge beide Secrets hinzu:
+   - Füge hinzu:
      - **Name:** `VITE_SUPABASE_URL` → **Value:** deine Supabase Project URL (z.B. `https://xyz.supabase.co`)
      - **Name:** `VITE_SUPABASE_ANON_KEY` → **Value:** dein Supabase Anon Key (Project Settings → API)
+     - **Name:** `VITE_APP_URL` (empfohlen) → **Value:** `https://<dein-user>.github.io` – sorgt für stabile Redirects bei E-Mail-Bestätigung
 
 3. **Deployment**
    - Push auf den `main` Branch triggert automatisch ein Deployment

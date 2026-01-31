@@ -9,6 +9,13 @@ import {
 import type { User, AuthError, Session } from "@supabase/supabase-js";
 import { supabase, isDemoMode } from "@/lib/supabase";
 
+// Redirect-URL für E-Mail-Bestätigung: Explizit in Production, dynamisch lokal
+const getEmailRedirectTo = () => {
+  const base = import.meta.env.VITE_APP_URL;
+  if (base) return `${base.replace(/\/$/, "")}/schredder/`;
+  return `${window.location.origin}/schredder/`;
+};
+
 // Demo-User für den Demo-Modus
 const DEMO_USER: User = {
   id: "demo-user-id",
@@ -114,7 +121,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/schredder/`,
+        emailRedirectTo: getEmailRedirectTo(),
       },
     });
     return { error };

@@ -41,6 +41,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || '' }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || '' }}
+          VITE_APP_URL: ${{ secrets.VITE_APP_URL || '' }}
 
       - name: Type Check
         run: npx tsc --noEmit
@@ -54,6 +55,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || '' }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || '' }}
+          VITE_APP_URL: ${{ secrets.VITE_APP_URL || '' }}
 
       - name: Upload artifact
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
