@@ -9,11 +9,18 @@ export const profileKeys = {
 };
 
 // Demo-Profil für den Demo-Modus
-const createDemoProfile = (id: string, email?: string): Tables<"profiles"> => ({
+const createDemoProfile = (
+  id: string,
+  email?: string,
+  nickname?: string | null,
+  avatarColor?: string | null
+): Tables<"profiles"> => ({
   id,
   email: email ?? "demo@example.com",
   full_name: "Demo Benutzer",
   avatar_url: null,
+  nickname: nickname ?? "Demo Benutzer",
+  avatar_color: avatarColor ?? "orange",
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
 });
@@ -29,7 +36,7 @@ export function useProfile(userId: string | undefined) {
 
       // Im Demo-Modus Demo-Profil zurückgeben
       if (isDemoMode) {
-        return createDemoProfile(userId);
+        return createDemoProfile(userId, undefined, "Demo Benutzer", "orange");
       }
 
       const { data, error } = await supabase
@@ -55,6 +62,8 @@ interface UpdateProfileParams {
     email?: string;
     full_name?: string | null;
     avatar_url?: string | null;
+    nickname?: string | null;
+    avatar_color?: string | null;
   };
 }
 
@@ -77,6 +86,8 @@ export function useUpdateProfile() {
           email: updates.email ?? profile.email,
           full_name: updates.full_name ?? profile.full_name,
           avatar_url: updates.avatar_url ?? profile.avatar_url,
+          nickname: updates.nickname ?? profile.nickname,
+          avatar_color: updates.avatar_color ?? profile.avatar_color,
           updated_at: new Date().toISOString(),
         };
       }
@@ -86,6 +97,8 @@ export function useUpdateProfile() {
         email: updates.email,
         full_name: updates.full_name,
         avatar_url: updates.avatar_url,
+        nickname: updates.nickname,
+        avatar_color: updates.avatar_color,
         updated_at: new Date().toISOString(),
       };
 

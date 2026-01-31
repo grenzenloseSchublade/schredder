@@ -131,50 +131,27 @@ VITE_SUPABASE_ANON_KEY=dein-anon-key
 # VITE_APP_URL=https://dein-user.github.io
 ```
 
-### 3. profiles-Tabelle anlegen
+### 3. Schema in Supabase anlegen (profiles + nugget_entries)
 
-Supabase speichert Nutzer in `auth.users`, aber diese Tabelle ist nicht direkt per API zugreifbar. Für zusätzliche Profildaten (Name, Avatar etc.) braucht die App eine eigene Tabelle `public.profiles`.
+Supabase speichert Nutzer in `auth.users`, aber diese Tabelle ist nicht direkt per API zugreifbar. Für Profildaten (Name, Avatar, Nickname etc.) und Nugget-Einträge braucht die App die Tabellen `public.profiles` und `public.nugget_entries`.
 
-**Warum?** Die Datei `src/types/database.types.ts` enthält TypeScript-Typen, die aus dem Schema deiner Supabase-Datenbank generiert werden. Ohne `profiles`-Tabelle sind die generierten Typen leer, und der Build schlägt fehl.
+**Warum?** Die Datei `src/types/database.types.ts` enthält TypeScript-Typen, die aus dem Schema deiner Supabase-Datenbank generiert werden. Ohne die Tabellen sind die generierten Typen unvollständig, und der Build kann fehlschlagen.
 
-**Im Supabase-Dashboard:** SQL Editor → New query → folgendes SQL ausführen:
+**So fügst du die Befehle konkret in Supabase ein:**
 
-```sql
-create table public.profiles (
-  id uuid not null references auth.users on delete cascade primary key,
-  email text,
-  full_name text,
-  avatar_url text,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
+1. Im **Supabase-Dashboard** deines Projekts: links **SQL Editor** öffnen.
+2. **New query** wählen (neue Abfrage).
+3. Die passende SQL-Datei öffnen: **`supabase/schema.sql`** im Projekt.
+4. **Entweder:**
+   - **Neues Projekt (noch keine profiles-Tabelle):** Im SQL-Editor nur **TEIL 1 – Vollständiges Setup** markieren und ausführen (Run).
+   - **Bestehendes Projekt (profiles existiert schon, alte SQL-Befehle waren schon ausgeführt):** Nur **TEIL 2 – Nur Erweiterung** markieren und ausführen (Run).
+5. Mit **Run** (oder Strg+Enter) die Abfrage ausführen.
 
-alter table public.profiles enable row level security;
-
-create policy "Users can view own profile"
-  on public.profiles for select using (auth.uid() = id);
-
-create policy "Users can update own profile"
-  on public.profiles for update using (auth.uid() = id);
-
-create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer set search_path = '' as $$
-begin
-  insert into public.profiles (id, email) values (new.id, new.email);
-  return new;
-end;
-$$;
-
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
-```
-
-Damit wird:
-- Die Tabelle angelegt
-- Row Level Security (RLS) aktiviert
-- Zugriffsregeln gesetzt (Nutzer sehen nur eigenes Profil)
-- Ein Trigger eingerichtet, der bei Registrierung automatisch ein Profil erzeugt
+Damit wird u. a.:
+- Die Tabelle `profiles` mit `nickname` und `avatar_color` angelegt bzw. ergänzt
+- Die Tabelle `nugget_entries` (Count, Sauce, Location, Mood, Notes) angelegt
+- Row Level Security (RLS) aktiviert und Policies gesetzt (Nutzer sehen nur eigene Einträge)
+- Der Trigger `handle_new_user` eingerichtet bzw. angepasst: bei Registrierung wird ein Profil mit zufälliger Avatar-Farbe erzeugt
 
 ### 4. URL-Konfiguration (Auth Redirects)
 
@@ -264,7 +241,7 @@ npx supabase gen types typescript --project-id <project-id> > src/types/database
 **Ursache:** Die generierten Typen in `database.types.ts` enthalten keine Tabellen (leeres Schema).
 
 **Lösung:**
-1. `profiles`-Tabelle in Supabase anlegen (siehe oben)
+1. Schema (profiles + nugget_entries) in Supabase anlegen (siehe oben)
 2. Typen neu generieren: `npx supabase gen types typescript --project-id <id> > src/types/database.types.ts`
 3. Build erneut ausführen
 

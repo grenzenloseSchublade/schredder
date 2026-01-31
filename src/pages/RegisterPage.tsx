@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { registerSchema, type RegisterFormData } from "@/lib/validations";
 import Input from "@/components/ui/Input";
+import InitialsAvatar from "@/components/InitialsAvatar";
 
 export default function RegisterPage() {
   const { signUp } = useAuth();
@@ -14,18 +15,24 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    control,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
       confirmPassword: "",
+      nickname: "",
     },
   });
 
+  const nickname = useWatch({ control, name: "nickname" });
+
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      const { error } = await signUp(data.email, data.password);
+      const { error } = await signUp(data.email, data.password, {
+        nickname: data.nickname,
+      });
 
       if (error) {
         toast.error("Registrierung fehlgeschlagen", {
@@ -50,6 +57,24 @@ export default function RegisterPage() {
         <p className="mt-2 text-gray-600">Erstelle ein neues Konto.</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+          <div className="flex items-center gap-4">
+            <InitialsAvatar
+              nickname={nickname || "??"}
+              color="orange"
+              size="xl"
+              className="shrink-0"
+            />
+            <Input
+              id="nickname"
+              type="text"
+              label="Spitzname"
+              placeholder="Dein Spitzname"
+              autoComplete="nickname"
+              error={errors.nickname?.message}
+              {...register("nickname")}
+            />
+          </div>
+
           <Input
             id="email"
             type="email"

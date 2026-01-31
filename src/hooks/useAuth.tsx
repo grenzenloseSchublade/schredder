@@ -37,7 +37,8 @@ interface AuthContextType {
   ) => Promise<{ error: AuthError | null }>;
   signUp: (
     email: string,
-    password: string
+    password: string,
+    metadata?: { nickname?: string }
   ) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
 }
@@ -111,21 +112,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return { error };
   }, []);
 
-  const signUp = useCallback(async (email: string, password: string) => {
-    if (isDemoMode) {
-      // Demo-Registrierung: Simuliere Erfolg
-      return { error: null };
-    }
+  const signUp = useCallback(
+    async (
+      email: string,
+      password: string,
+      metadata?: { nickname?: string }
+    ) => {
+      if (isDemoMode) {
+        return { error: null };
+      }
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: getEmailRedirectTo(),
-      },
-    });
-    return { error };
-  }, []);
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: getEmailRedirectTo(),
+          data: metadata ? { nickname: metadata.nickname } : undefined,
+        },
+      });
+      return { error };
+    },
+    []
+  );
 
   const signOut = useCallback(async () => {
     if (isDemoMode) {
