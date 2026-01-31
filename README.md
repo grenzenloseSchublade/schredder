@@ -108,21 +108,77 @@ src/
 2. Kopiere die Project URL und den Anon Key aus den Project Settings
 3. Füge sie in deine `.env.local` Datei ein
 
+### Warum die profiles-Tabelle und Typen-Generierung?
+
+Supabase speichert Nutzer in `auth.users`, aber diese Tabelle ist nicht direkt per API zugreifbar. Für zusätzliche Profildaten (Name, Avatar etc.) braucht die App deshalb eine eigene Tabelle `public.profiles`. Sie wird per Trigger automatisch befüllt, sobald sich ein Nutzer registriert.
+
+Die Datei `src/types/database.types.ts` enthält die TypeScript-Typen für alle Tabellen. Sie wird **aus dem Schema deiner Supabase-Datenbank** erzeugt – nicht manuell geschrieben. Ohne die `profiles`-Tabelle findet die Typsgenerierung keine passenden Tabellen, die generierten Typen sind leer, und der Build schlägt fehl. Deshalb müssen erst die Tabelle angelegt und anschließend die Typen neu generiert werden.
+
+### profiles-Tabelle anlegen
+
+Im Supabase-Dashboard: **SQL Editor** → **New query** → folgendes SQL ausführen:
+
+```sql
+create table public.profiles (
+  id uuid not null references auth.users on delete cascade primary key,
+  email text,
+  full_name text,
+  avatar_url text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table public.profiles enable row level security;
+
+create policy "Users can view own profile"
+  on public.profiles for select using (auth.uid() = id);
+
+create policy "Users can update own profile"
+  on public.profiles for update using (auth.uid() = id);
+
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  insert into public.profiles (id, email) values (new.id, new.email);
+  return new;
+end;
+$$;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+```
+
+Damit wird die Tabelle angelegt, RLS aktiviert, Zugriffsregeln gesetzt und ein Trigger eingerichtet, der bei jeder Registrierung automatisch ein Profil erzeugt.
+
+### URL-Konfiguration (Auth Redirects)
+
+Für E-Mail-Bestätigung und Deployment auf GitHub Pages müssen **Site URL** und **Redirect URLs** im Supabase-Dashboard gesetzt werden:
+
+**Pfad:** Authentication → URL Configuration
+
+- **Site URL:** `https://<dein-github-user>.github.io/schredder/` (Production-URL deiner App)
+- **Redirect URLs** (Allow list):
+  - `https://<user>.github.io/schredder/**` (Production, inkl. Hash für Auth-Token)
+  - `http://localhost:5173/schredder/**` (Lokale Entwicklung)
+
+Ohne diese Einstellung führen Bestätigungslinks in E-Mails fälschlich zu localhost statt zur produktiven App.
+
 ### Datenbank-Typen generieren
 
-Die Typen werden aus deinem Supabase-Projekt automatisch generiert. Dafür musst du zuerst bei der Supabase CLI eingeloggt sein:
+Die Typen werden aus deinem Supabase-Projekt automatisch generiert. Zuerst bei der Supabase CLI einloggen:
 
 ```bash
 npx supabase login
 ```
 
-Dann kannst du die Typen generieren:
+> **DevContainer / Headless:** Öffne den angezeigten Login-Link manuell und gib den Verifikationscode im Terminal ein.
+
+Anschließend Typen generieren (ersetze `<your-project-id>` durch den Teil vor `.supabase.co` in deiner Supabase-URL):
 
 ```bash
 npx supabase gen types typescript --project-id <your-project-id> > src/types/database.types.ts
 ```
-
-Dann kannst du die Typen in deinem Projekt verwenden.
 
 ## DevContainer
 
@@ -137,6 +193,8 @@ Das Projekt enthält eine DevContainer-Konfiguration für VS Code. Um den DevCon
 ### GitHub Pages
 
 Das Projekt ist für automatisches Deployment auf GitHub Pages konfiguriert.
+
+> **Supabase Auth:** Für funktionierende E-Mail-Bestätigung nach der Registrierung muss die URL-Konfiguration in Supabase (siehe oben unter „URL-Konfiguration“) auf die Production-URL gesetzt sein.
 
 1. **Repository Settings**
    - Gehe zu Settings → Pages

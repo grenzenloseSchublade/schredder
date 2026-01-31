@@ -113,6 +113,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/schredder/`,
+      },
     });
     return { error };
   }, []);
@@ -144,7 +147,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth muss innerhalb eines AuthProvider verwendet werden");
+    throw new Error(
+      "useAuth muss innerhalb eines AuthProvider verwendet werden"
+    );
   }
   return context;
 }
