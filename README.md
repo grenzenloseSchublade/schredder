@@ -110,9 +110,19 @@ src/
 
 ### Datenbank-Typen generieren
 
+Die Typen werden aus deinem Supabase-Projekt automatisch generiert. Dafür musst du zuerst bei der Supabase CLI eingeloggt sein:
+
+```bash
+npx supabase login
+```
+
+Dann kannst du die Typen generieren:
+
 ```bash
 npx supabase gen types typescript --project-id <your-project-id> > src/types/database.types.ts
 ```
+
+Dann kannst du die Typen in deinem Projekt verwenden.
 
 ## DevContainer
 
@@ -134,9 +144,11 @@ Das Projekt ist für automatisches Deployment auf GitHub Pages konfiguriert.
 
 2. **Secrets hinzufügen**
    - Gehe zu Settings → Secrets and variables → Actions
-   - Füge hinzu:
-     - `VITE_SUPABASE_URL`
-     - `VITE_SUPABASE_ANON_KEY`
+   - Wähle **Repository secrets** (Environment secrets funktionieren ebenfalls, wenn für `github-pages` konfiguriert)
+   - Klicke auf **New repository secret**
+   - Füge beide Secrets hinzu:
+     - **Name:** `VITE_SUPABASE_URL` → **Value:** deine Supabase Project URL (z.B. `https://xyz.supabase.co`)
+     - **Name:** `VITE_SUPABASE_ANON_KEY` → **Value:** dein Supabase Anon Key (Project Settings → API)
 
 3. **Deployment**
    - Push auf den `main` Branch triggert automatisch ein Deployment
