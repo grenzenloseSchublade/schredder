@@ -23,10 +23,11 @@ Die App läuft unter: [http://localhost:5173/schredder/](http://localhost:5173/s
 ## TODO
 
 - [ ] User testen lassen -> UI anpassen, UX >
-- [ ] About Seite -> Warum gibt es die Seite überhaupt?
+- [ ] About Seite -> Warum gibt es die Seite überhaupt?, Herstellungsverfahren, etc.
 - [ ] Seite über Suchmaschinen (Google) auffindbar machen
 - [x] Kuule und verstörende Infos über Nuggets (Gewicht pro Kücken, etc)
 - [x] Rangliste für mehrere User (wie viel Nugget haben sie geschredded?)
+- [ ] FunFacts: Infos über Kücken (Gewicht) und Umrechnung in Nuggets, und Herstellungsverfahren hinzufügen -> https://www.bonappetit.com/story/chicken-nugget-history
 
 - [ ] Grafiken / Animationen erstellen lassen & hinzufügen 
 - [ ] Funktionalität erweitern auf Tenders, Wings, etc. 
