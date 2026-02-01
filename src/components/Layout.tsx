@@ -5,6 +5,7 @@ import { AddEntryModalProvider } from "@/contexts/AddEntryModalContext";
 import FunFactsBar from "@/components/FunFactsBar";
 import FloatingAddButton from "@/components/FloatingAddButton";
 import AddEntryModal from "@/components/AddEntryModal";
+import WelcomeBanner from "@/components/WelcomeBanner";
 
 export default function Layout() {
   const { user, signOut, loading, isDemoMode } = useAuth();
@@ -132,14 +133,64 @@ export default function Layout() {
 
         <FloatingAddButton />
         <AddEntryModal />
+        <WelcomeBanner />
         <FunFactsBar />
 
         <footer className="bg-gray-100 py-8">
-          <div className="mx-auto max-w-7xl px-4 text-center">
-            <div className="text-sm text-gray-500">
+          <div className="mx-auto max-w-7xl px-4">
+            {/* Trust-Hinweise */}
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-600">
+              <span className="flex items-center gap-1.5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-4 text-gray-400"
+                  aria-hidden
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                SSL-verschlüsselt
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-4 text-gray-400"
+                  aria-hidden
+                >
+                  <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+                </svg>
+                Anonym nutzbar
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-4 text-gray-400"
+                  aria-hidden
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .976.544l.062.029.018.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Daten in der EU
+              </span>
+            </div>
+
+            {/* Copyright */}
+            <div className="mt-6 text-center text-sm text-gray-500">
               {new Date().getFullYear()} Schredder. Alle Rechte vorbehalten.
             </div>
-            <div className="mt-2 text-xs text-gray-400">
+            <div className="mt-2 text-center text-xs text-gray-400">
               React 19 • Vite 7 • TypeScript • Tailwind CSS 4 • Supabase
             </div>
           </div>

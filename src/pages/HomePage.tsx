@@ -24,6 +24,17 @@ export default function HomePage() {
             <p className="mx-auto mt-6 max-w-xl text-lg text-orange-100 sm:text-xl">
               Tracke deine Chicken Nuggets Vernichtung. Wie viele schaffst du?
             </p>
+            <p className="mx-auto mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-orange-200/90">
+              <span>Anonym nutzbar</span>
+              <span className="hidden sm:inline" aria-hidden>
+                |
+              </span>
+              <span>Keine echten Namen erforderlich</span>
+              <span className="hidden sm:inline" aria-hidden>
+                |
+              </span>
+              <span>Daten sicher in der EU</span>
+            </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               {user ? (
                 <>

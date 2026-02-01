@@ -56,6 +56,20 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-bold text-gray-900">Registrieren</h1>
         <p className="mt-2 text-gray-600">Erstelle ein neues Konto.</p>
 
+        <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+          <p className="font-medium text-gray-700">Hinweis zur Anonymität</p>
+          <ul className="mt-2 space-y-1 text-gray-600">
+            <li>
+              Dein Spitzname wird im Leaderboard angezeigt – verwende keinen
+              echten Namen.
+            </li>
+            <li>
+              Deine E-Mail dient nur zur Anmeldung und wird niemals öffentlich
+              angezeigt.
+            </li>
+          </ul>
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div className="flex items-center gap-4">
             <InitialsAvatar
