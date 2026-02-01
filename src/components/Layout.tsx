@@ -186,8 +186,18 @@ export default function Layout() {
               </span>
             </div>
 
+            {/* Footer-Links */}
+            <div className="mt-6 flex justify-center gap-4 text-sm">
+              <Link
+                to="/about"
+                className="text-gray-500 transition hover:text-orange-600"
+              >
+                Über uns
+              </Link>
+            </div>
+
             {/* Copyright */}
-            <div className="mt-6 text-center text-sm text-gray-500">
+            <div className="mt-4 text-center text-sm text-gray-500">
               {new Date().getFullYear()} Schredder. Alle Rechte vorbehalten.
             </div>
             <div className="mt-2 text-center text-xs text-gray-400">

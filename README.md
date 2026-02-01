@@ -23,14 +23,16 @@ Die App läuft unter: [http://localhost:5173/schredder/](http://localhost:5173/s
 ## TODO
 
 - [ ] User testen lassen -> UI anpassen, UX >
-- [ ] About Seite -> Warum gibt es die Seite überhaupt?, Herstellungsverfahren, etc.
+- [x] About Seite -> Warum gibt es die Seite überhaupt?, Herstellungsverfahren, etc.
 - [x] Kuule und verstörende Infos über Nuggets (Gewicht pro Kücken, etc)
 - [x] Rangliste für mehrere User (wie viel Nugget haben sie geschredded?)
-- [ ] FunFacts: Infos über Kücken (Gewicht) und Umrechnung in Nuggets, und Herstellungsverfahren hinzufügen 
+- [x] FunFacts: Infos über Kücken (Gewicht) und Umrechnung in Nuggets, und Herstellungsverfahren hinzufügen 
 
-- [ ] Domain + auf Server hosen & Seite über Suchmaschinen (Google) auffindbar machen (?)
+- [ ]  Gruppen erstellen + Wettkämpfe
+- [ ] Domain + auf Server hosten & Seite über Suchmaschinen (Google) auffindbar machen (?)
 - [ ] Grafiken / Animationen erstellen lassen & hinzufügen 
-- [ ] Funktionalität erweitern auf Tenders, Wings, etc. 
+- [ ] Funktionalität erweitern auf Tenders, Wings, etc.
+- [ ] Kontaktformular mit Formspree integrieren (Alternative zu GitHub Issues) 
 
 
 ## Tech Stack
