@@ -39,8 +39,9 @@ export default function DashboardPage() {
       .reduce((sum, e) => sum + e.count, 0);
     const sauceCounts: Record<string, number> = {};
     for (const e of entries) {
-      if (e.sauce) {
-        sauceCounts[e.sauce] = (sauceCounts[e.sauce] ?? 0) + 1;
+      const sauces = e.sauces ?? [];
+      for (const s of sauces) {
+        if (s) sauceCounts[s] = (sauceCounts[s] ?? 0) + 1;
       }
     }
     const topSauce =
@@ -62,7 +63,7 @@ export default function DashboardPage() {
       await createEntry.mutateAsync({
         user_id: user.id,
         count: data.count,
-        sauce: data.sauce || null,
+        sauces: data.sauces ?? [],
         location: data.location || null,
         mood: data.mood || null,
         notes: data.notes || null,
@@ -106,7 +107,7 @@ export default function DashboardPage() {
                 Willkommen, {displayName}!
               </h1>
               <p className="mt-1 text-gray-600">
-                🍗 Deine Chicken Nuggets Vernichtungs-Stats
+                Deine Chicken Nuggets Vernichtungs-Stats
               </p>
               {isDemoMode && (
                 <span className="mt-2 inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
@@ -161,9 +162,9 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setShowForm(true)}
-              className="w-full rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-6 text-lg font-semibold text-white shadow-lg transition hover:from-orange-600 hover:to-red-600 hover:shadow-xl"
+              className="w-full rounded-xl border-2 border-dashed border-orange-300 bg-orange-50/50 px-6 py-4 text-base font-medium text-orange-700 transition hover:border-orange-400 hover:bg-orange-50"
             >
-              🍗 Neuer Eintrag
+              + Eintrag hinzufügen
             </button>
           )}
         </div>
@@ -178,10 +179,9 @@ export default function DashboardPage() {
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
             </div>
           ) : entries.length === 0 ? (
-            <div className="rounded-2xl bg-white p-12 text-center shadow-lg ring-1 ring-gray-200/50">
-              <p className="text-5xl">🍗</p>
-              <p className="mt-4 text-gray-600">
-                Noch keine Einträge. Klicke auf „Neuer Eintrag“ und starte!
+            <div className="rounded-xl bg-white p-12 text-center shadow-md ring-1 ring-gray-200/60">
+              <p className="text-gray-500">
+                Noch keine Einträge. Klicke auf „Eintrag hinzufügen“ und starte.
               </p>
             </div>
           ) : (

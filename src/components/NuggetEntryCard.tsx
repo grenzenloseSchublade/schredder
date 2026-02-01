@@ -32,11 +32,19 @@ export default function NuggetEntryCard({
   canDelete = false,
 }: NuggetEntryCardProps) {
   return (
-    <div className="group rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200/50 transition-all hover:shadow-xl hover:ring-orange-200">
+    <div className="group rounded-xl bg-white p-5 shadow-md ring-1 ring-gray-200/60 transition hover:ring-orange-200/60">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-1 gap-4">
-          <div className="flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-red-500 p-3 text-3xl">
-            🍗
+          <div className="flex shrink-0 items-center justify-center rounded-lg bg-orange-100 p-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-6 w-6 text-orange-600"
+              aria-hidden
+            >
+              <path d="M4 4h16v2H4V4Zm0 4h16v2H4V8Zm0 4h12v2H4v-2Zm0 4h8v2H4v-2Z" />
+            </svg>
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-2">
@@ -49,14 +57,17 @@ export default function NuggetEntryCard({
               {formatRelativeTime(entry.created_at)}
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {entry.sauce && (
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
-                  {entry.sauce}
+              {(entry.sauces ?? []).map((s) => (
+                <span
+                  key={s}
+                  className="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-xs text-amber-800"
+                >
+                  {s}
                 </span>
-              )}
+              ))}
               {entry.location && (
-                <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-                  📍 {entry.location}
+                <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                  {entry.location}
                 </span>
               )}
               {entry.mood && (

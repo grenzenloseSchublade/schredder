@@ -24,9 +24,11 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "Users can view own profile" on public.profiles;
 create policy "Users can view own profile"
   on public.profiles for select using (auth.uid() = id);
 
+drop policy if exists "Users can update own profile" on public.profiles;
 create policy "Users can update own profile"
   on public.profiles for update using (auth.uid() = id);
 
@@ -46,6 +48,7 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
@@ -56,7 +59,7 @@ create table if not exists public.nugget_entries (
   user_id uuid not null references auth.users on delete cascade,
   count integer not null check (count > 0),
   created_at timestamptz not null default now(),
-  sauce text,
+  sauces text[] default '{}',
   location text,
   mood text,
   notes text
@@ -67,18 +70,22 @@ create index if not exists nugget_entries_created_at_idx on public.nugget_entrie
 
 alter table public.nugget_entries enable row level security;
 
+drop policy if exists "Users can view own entries" on public.nugget_entries;
 create policy "Users can view own entries"
   on public.nugget_entries for select
   using (auth.uid() = user_id);
 
+drop policy if exists "Users can insert own entries" on public.nugget_entries;
 create policy "Users can insert own entries"
   on public.nugget_entries for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "Users can update own entries" on public.nugget_entries;
 create policy "Users can update own entries"
   on public.nugget_entries for update
   using (auth.uid() = user_id);
 
+drop policy if exists "Users can delete own entries" on public.nugget_entries;
 create policy "Users can delete own entries"
   on public.nugget_entries for delete
   using (auth.uid() = user_id);
@@ -132,7 +139,7 @@ create table if not exists public.nugget_entries (
   user_id uuid not null references auth.users on delete cascade,
   count integer not null check (count > 0),
   created_at timestamptz not null default now(),
-  sauce text,
+  sauces text[] default '{}',
   location text,
   mood text,
   notes text
@@ -202,3 +209,25 @@ where rank <= 10
 order by rank;
 
 grant select on public.nugget_leaderboard to anon, authenticated;
+
+-- =============================================================================
+-- TEIL 4 – Migration: sauce (text) zu sauces (text[])
+-- =============================================================================
+-- Führe aus, wenn nugget_entries noch die alte Spalte "sauce" hat.
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'nugget_entries' and column_name = 'sauce'
+  ) then
+    alter table public.nugget_entries add column if not exists sauces text[] default '{}';
+    update public.nugget_entries
+    set sauces = case
+      when sauce is not null and trim(sauce) != '' then array[trim(sauce)]
+      else '{}'
+    end;
+    alter table public.nugget_entries drop column sauce;
+  end if;
+end
+$$;

@@ -22,7 +22,9 @@ function getInitialReducedMotion(): boolean {
 }
 
 export default function FunFactsBar() {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(() =>
+    Math.floor(Math.random() * FUN_FACTS.length)
+  );
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(
     getInitialReducedMotion
   );

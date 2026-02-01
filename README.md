@@ -157,11 +157,12 @@ Supabase speichert Nutzer in `auth.users`, aber diese Tabelle ist nicht direkt p
 4. **Entweder:**
    - **Neues Projekt (noch keine profiles-Tabelle):** Im SQL-Editor nur **TEIL 1 – Vollständiges Setup** markieren und ausführen (Run).
    - **Bestehendes Projekt (profiles existiert schon, alte SQL-Befehle waren schon ausgeführt):** Nur **TEIL 2 – Nur Erweiterung** markieren und ausführen (Run).
+   - **Projekt mit alter `sauce`-Spalte (einzelne Sauce):** **TEIL 4 – Migration** ausführen (wandelt `sauce` in `sauces` Array um).
 5. Mit **Run** (oder Strg+Enter) die Abfrage ausführen.
 
 Damit wird u. a.:
 - Die Tabelle `profiles` mit `nickname` und `avatar_color` angelegt bzw. ergänzt
-- Die Tabelle `nugget_entries` (Count, Sauce, Location, Mood, Notes) angelegt
+- Die Tabelle `nugget_entries` (Count, Saucen als Array, Location, Mood, Notes) angelegt
 - Row Level Security (RLS) aktiviert und Policies gesetzt (Nutzer sehen nur eigene Einträge)
 - Der Trigger `handle_new_user` eingerichtet bzw. angepasst: bei Registrierung wird ein Profil mit zufälliger Avatar-Farbe erzeugt
 
