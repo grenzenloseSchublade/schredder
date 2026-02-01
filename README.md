@@ -1,6 +1,6 @@
 # Schredder
 
-Eine moderne React-Anwendung mit Vite, TypeScript, Tailwind CSS und Supabase.
+Die einzige Tracking App die du wirklich brauchst. Für Nuggets. 
 
 ## Schnellstart
 
