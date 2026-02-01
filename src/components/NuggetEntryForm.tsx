@@ -15,7 +15,18 @@ const SAUCE_OPTIONS = [
   { value: "Andere", label: "Andere" },
 ] as const;
 
-const MOOD_OPTIONS = ["😋", "🤤", "😍", "🥰", "😎", "🤩", "😌", "🙂"] as const;
+const MOOD_OPTIONS = [
+  "🍗",
+  "🐔",
+  "🐓",
+  "🥚",
+  "🐥",
+  "🤤",
+  "😋",
+  "🔥",
+  "🌶️",
+  "🐣",
+] as const;
 
 interface NuggetEntryFormProps {
   onSubmit: (data: NuggetEntryFormData & { created_at: string }) => void;

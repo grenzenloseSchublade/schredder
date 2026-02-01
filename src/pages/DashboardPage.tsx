@@ -10,7 +10,9 @@ import {
 import InitialsAvatar from "@/components/InitialsAvatar";
 import NuggetEntryForm from "@/components/NuggetEntryForm";
 import NuggetEntryCard from "@/components/NuggetEntryCard";
+import DeleteEntryConfirmDialog from "@/components/DeleteEntryConfirmDialog";
 import type { NuggetEntryFormData } from "@/lib/validations";
+import type { Tables } from "@/types/database.types";
 
 export default function DashboardPage() {
   const { user, isDemoMode } = useAuth();
@@ -22,6 +24,8 @@ export default function DashboardPage() {
   const deleteEntry = useDeleteNuggetEntry();
 
   const [showForm, setShowForm] = useState(false);
+  const [entryToDelete, setEntryToDelete] =
+    useState<Tables<"nugget_entries"> | null>(null);
 
   const displayName =
     profile?.nickname ||
@@ -85,6 +89,7 @@ export default function DashboardPage() {
     try {
       await deleteEntry.mutateAsync({ id, userId: user.id });
       toast.success("Eintrag gelöscht");
+      setEntryToDelete(null);
     } catch {
       toast.error("Fehler beim Löschen");
     }
@@ -190,13 +195,21 @@ export default function DashboardPage() {
                 <NuggetEntryCard
                   key={entry.id}
                   entry={entry}
-                  onDelete={handleDeleteEntry}
+                  onDeleteClick={(e) => setEntryToDelete(e)}
                   canDelete
                 />
               ))}
             </div>
           )}
         </div>
+
+        <DeleteEntryConfirmDialog
+          key={entryToDelete?.id ?? "closed"}
+          entry={entryToDelete}
+          onConfirm={handleDeleteEntry}
+          onCancel={() => setEntryToDelete(null)}
+          isDeleting={deleteEntry.isPending}
+        />
       </div>
     </div>
   );

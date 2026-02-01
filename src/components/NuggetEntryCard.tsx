@@ -2,7 +2,7 @@ import type { Tables } from "@/types/database.types";
 
 interface NuggetEntryCardProps {
   entry: Tables<"nugget_entries">;
-  onDelete?: (id: string) => void;
+  onDeleteClick?: (entry: Tables<"nugget_entries">) => void;
   canDelete?: boolean;
 }
 
@@ -28,7 +28,7 @@ function formatRelativeTime(isoString: string): string {
 
 export default function NuggetEntryCard({
   entry,
-  onDelete,
+  onDeleteClick,
   canDelete = false,
 }: NuggetEntryCardProps) {
   return (
@@ -86,10 +86,10 @@ export default function NuggetEntryCard({
             )}
           </div>
         </div>
-        {canDelete && onDelete && (
+        {canDelete && onDeleteClick && (
           <button
             type="button"
-            onClick={() => onDelete(entry.id)}
+            onClick={() => onDeleteClick(entry)}
             className="shrink-0 rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
             aria-label="Eintrag löschen"
           >

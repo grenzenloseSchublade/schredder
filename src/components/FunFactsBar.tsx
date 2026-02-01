@@ -1,16 +1,24 @@
 import { useState, useEffect, useCallback } from "react";
 
 const FUN_FACTS = [
-  "Chicken Nuggets wurden 1963 von einem US-Forscher erfunden.",
-  "In Deutschland werden jährlich mehrere tausend Tonnen Nuggets verzehrt.",
-  "Die durchschnittliche Nugget-Packung hat 6, 9 oder 20 Stück.",
-  "McDonald’s verkauft weltweit Milliarden Nuggets pro Jahr.",
-  "Nuggets bestehen meist aus Hähnchenbrust oder -hack.",
-  "Die beliebteste Sauce zu Nuggets ist oft BBQ oder Sweet & Sour.",
-  "Ein Nugget wiegt ungefähr 15–20 Gramm.",
-  "Nuggets wurden ursprünglich als preiswerte Alternative zu ganzen Hühnchen entwickelt.",
-  "Manche Länder haben Nuggets in Form von Dinosauriern oder Herzen.",
-  "Die goldene Farbe kommt von der Panade und dem Frittieren.",
+  "Chicken Nuggets wurden 1963 von Robert C. Baker an der Cornell University erfunden.",
+  "McDonald's McNuggets gibt es in genau 4 Formen: Boot, Glocke, Kugel und Knochen – alle beginnen mit B.",
+  "McDonald's dazu: Drei Formen wären zu wenig, fünf zu verrückt gewesen.",
+  "McDonald’s verkauft weltweit Milliarden McNuggets pro Jahr.",
+  "Pommes Frites stammen aus Belgien – Kartoffeln wurden in Fischform geschnitten, wenn die Maas zugefroren war.",
+  "In Belgien gibt es rund 5000 Frittenbuden und ein Frietmuseum in Brügge.",
+  "McDonald's McNuggets kamen 1983 in den USA, 1984 in Deutschland auf die Speisekarte.",
+  "Die ersten McNuggets gab es mit vier Saucen: Honey, Sweet & Sour, Hot Mustard und BBQ.",
+  "Ein Nugget hat etwa 45–50 Kalorien.",
+  "Colonel Sanders von KFC war ein ehrenamtlicher Colonel – der Titel wurde ihm vom Gouverneur von Kentucky verliehen.",
+  "KFCs Geheimrezept soll 11 Kräuter und Gewürze enthalten.",
+  "Nuggets wurden als preiswerte Alternative zu ganzen Hühnchen entwickelt.",
+  "Die goldene Farbe von Nuggets kommt von der Panade und dem Frittieren.",
+  "Die McNugget-Formen wurden 2021 per TikTok wieder zum Gesprächsthema.",
+  "Manche Länder haben Nuggets in Dino- oder Herzform – nicht nur die klassischen B-Formen.",
+  "Belgien und Frankreich streiten sich darum, wer die Pommes erfunden hat.",
+  "Ein 6er-Nugget liefert etwa 20 Gramm Protein – gut ein Drittel des Tagesbedarfs.",
+  "McDonald's stellt McNuggets seit 2016 ohne künstliche Farb- und Konservierungsstoffe her.",
 ];
 
 const ROTATION_DELAY_MS = 7000;

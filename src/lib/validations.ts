@@ -48,7 +48,9 @@ export const nuggetEntrySchema = z.object({
     .max(999, "Maximal 999 Nuggets pro Eintrag"),
   sauces: z.array(z.string().max(50)).default([]),
   location: z.string().max(100).optional(),
-  mood: z.enum(["😋", "🤤", "😍", "🥰", "😎", "🤩", "😌", "🙂"]).optional(),
+  mood: z
+    .enum(["🍗", "🐔", "🐓", "🥚", "🐥", "🤤", "😋", "🔥", "🌶️", "🐣"])
+    .optional(),
   notes: z.string().max(500).optional(),
 });
 
