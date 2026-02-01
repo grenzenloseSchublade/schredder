@@ -15,13 +15,21 @@ const FUN_FACTS = [
 
 const ROTATION_DELAY_MS = 7000;
 
+// Initialen Wert lazy ermitteln (nur einmal beim ersten Render, nicht im Effect)
+function getInitialReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export default function FunFactsBar() {
   const [index, setIndex] = useState(0);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    getInitialReducedMotion
+  );
 
+  // Effect nur für Subscription bei späteren Änderungen (kein synchroner setState mehr)
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mq.matches);
     const handler = () => setPrefersReducedMotion(mq.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
