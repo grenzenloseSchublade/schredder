@@ -13,10 +13,10 @@ export default function LeaderboardSection() {
         id="leaderboard-heading"
         className="text-center text-2xl font-bold text-gray-900 sm:text-3xl"
       >
-        Top 10 Nugget-Shredder
+        Top 10 Nugget Schredder
       </h2>
       <p className="mt-2 text-center text-gray-600">
-        Die fleißigsten Schredder – nur Avatar und Nickname, anonym.
+        Hier werden anonym die fleißigsten Schredderer gelistet.
       </p>
 
       {isLoading && (

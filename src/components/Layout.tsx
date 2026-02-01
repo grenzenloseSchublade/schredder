@@ -12,7 +12,7 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-14">
       {/* Demo Banner */}
       {isDemoMode && (
         <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-center text-sm font-medium text-white">
@@ -29,7 +29,7 @@ export default function Layout() {
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
-              <Link to="/" className="text-xl font-bold text-blue-600">
+              <Link to="/" className="text-xl font-bold text-orange-600">
                 Schredder
               </Link>
               {isDemoMode && (
@@ -41,12 +41,12 @@ export default function Layout() {
 
             <div className="flex items-center gap-4">
               {loading ? (
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent"></div>
               ) : user ? (
                 <>
                   <Link
                     to="/dashboard"
-                    className="text-gray-700 hover:text-blue-600 transition"
+                    className="text-gray-700 hover:text-orange-600 transition"
                   >
                     Dashboard
                   </Link>
@@ -61,7 +61,7 @@ export default function Layout() {
                 <>
                   <Link
                     to="/login"
-                    className="text-gray-700 hover:text-blue-600 transition"
+                    className="text-gray-700 hover:text-orange-600 transition"
                   >
                     Anmelden
                   </Link>

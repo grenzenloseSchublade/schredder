@@ -46,7 +46,7 @@ export default function FunFactsBar() {
 
   return (
     <div
-      className="hidden lg:block fixed bottom-0 left-0 right-0 z-10 border-t border-gray-200 bg-gray-50/95 px-4 py-3 text-center text-sm text-gray-600 backdrop-blur-sm"
+      className="block fixed bottom-0 left-0 right-0 z-10 border-t border-gray-200 bg-gray-50/95 px-4 py-3 text-center text-sm text-gray-600 backdrop-blur-sm"
       role="region"
       aria-live="polite"
       aria-label="Wechselnde Fun Facts"
