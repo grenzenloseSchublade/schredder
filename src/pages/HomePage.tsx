@@ -29,11 +29,11 @@ export default function HomePage() {
               <span className="hidden sm:inline" aria-hidden>
                 |
               </span>
-              <span>Keine echten Namen erforderlich</span>
+              <span>Ohne personenbezogene Daten</span>
               <span className="hidden sm:inline" aria-hidden>
                 |
               </span>
-              <span>Daten sicher in der EU</span>
+              <span>Datenspeicherung in der EU</span>
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               {user ? (
