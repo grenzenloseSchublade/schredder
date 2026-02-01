@@ -31,8 +31,7 @@ export default function AddEntryModal() {
       closeModal();
     } catch (err) {
       toast.error("Fehler beim Speichern", {
-        description:
-          err instanceof Error ? err.message : "Unbekannter Fehler",
+        description: err instanceof Error ? err.message : "Unbekannter Fehler",
       });
     }
   };
