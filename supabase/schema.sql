@@ -162,3 +162,30 @@ drop policy if exists "Users can delete own entries" on public.nugget_entries;
 create policy "Users can delete own entries"
   on public.nugget_entries for delete
   using (auth.uid() = user_id);
+
+-- =============================================================================
+-- TEIL 3 – Leaderboard-View (Top 10 Nugget-Shredder, anonymisiert)
+-- =============================================================================
+-- Führe nach TEIL 1 oder TEIL 2 aus. Ermöglicht Lesezugriff für alle (anon + authenticated).
+
+create or replace view public.nugget_leaderboard
+with (security_invoker = false)
+as
+select rank, nickname, avatar_color, total_nuggets
+from (
+  select
+    rank() over (order by coalesce(t.total_nuggets, 0) desc)::integer as rank,
+    coalesce(nullif(trim(p.nickname), ''), 'Anonym') as nickname,
+    p.avatar_color,
+    coalesce(t.total_nuggets, 0)::bigint as total_nuggets
+  from public.profiles p
+  left join (
+    select user_id, sum(count) as total_nuggets
+    from public.nugget_entries
+    group by user_id
+  ) t on t.user_id = p.id
+) sub
+where rank <= 10
+order by rank;
+
+grant select on public.nugget_leaderboard to anon, authenticated;

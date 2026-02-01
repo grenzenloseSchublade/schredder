@@ -8,6 +8,7 @@ const SAUCE_OPTIONS = [
   { value: "", label: "Keine Auswahl" },
   { value: "BBQ", label: "BBQ" },
   { value: "Süß-Sauer", label: "Süß-Sauer" },
+  { value: "Sweet Chili", label: "Sweet Chili" },
   { value: "Curry", label: "Curry" },
   { value: "Ketchup", label: "Ketchup" },
   { value: "Mayo", label: "Mayo" },

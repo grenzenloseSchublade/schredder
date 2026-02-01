@@ -20,6 +20,13 @@ Die App läuft unter: [http://localhost:5173/schredder/](http://localhost:5173/s
 
 > **Wichtig:** Du benötigst ein [Supabase](https://supabase.com) Projekt. Siehe Kapitel „Supabase" für die vollständige Einrichtung.
 
+## TODO
+
+- [ ] UI komplettt anpassen -> keine "Startseite"
+- [ ] Kuule und verstörende Infos über Nuggets (Gewcht pro Kücken, etc)
+- [ ] Rangliste für mehrere User (wie viel Nugget haben sie geschredded?)
+- 
+
 ## Tech Stack
 
 - **React 19** - UI Library

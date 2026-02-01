@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import FunFactsBar from "@/components/FunFactsBar";
 
 export default function Layout() {
   const { user, signOut, loading, isDemoMode } = useAuth();
@@ -77,6 +78,8 @@ export default function Layout() {
       <main className="flex-1">
         <Outlet />
       </main>
+
+      <FunFactsBar />
 
       <footer className="bg-gray-100 py-8">
         <div className="mx-auto max-w-7xl px-4 text-center">

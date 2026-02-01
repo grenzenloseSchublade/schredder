@@ -37,3 +37,19 @@
 .card {
   @apply rounded-xl bg-white p-6 shadow-md;
 }
+
+/* Fun-Facts-Bar: Slide-Animation für wechselnde Facts */
+@keyframes fact-slide {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fact-slide {
+  animation: fact-slide 0.4s ease-out;
+}
