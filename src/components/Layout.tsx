@@ -51,7 +51,7 @@ export default function Layout() {
                   <>
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-1 text-gray-700 transition hover:text-orange-600"
+                      className="flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg px-2 text-gray-700 transition hover:bg-gray-100 hover:text-orange-600 sm:px-3"
                       aria-label="Dashboard"
                     >
                       {/* Icon auf Mobile */}
@@ -69,7 +69,7 @@ export default function Layout() {
                     </Link>
                     <button
                       onClick={handleSignOut}
-                      className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm transition hover:bg-gray-50 sm:px-4 sm:py-2"
+                      className="flex min-h-[44px] items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm transition hover:bg-gray-50 sm:px-4"
                       aria-label="Abmelden"
                     >
                       {/* Icon auf Mobile */}
@@ -93,7 +93,7 @@ export default function Layout() {
                   <>
                     <Link
                       to="/login"
-                      className="flex items-center gap-1 text-gray-700 transition hover:text-orange-600"
+                      className="flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg px-2 text-gray-700 transition hover:bg-gray-100 hover:text-orange-600 sm:px-3"
                       aria-label="Anmelden"
                     >
                       {/* Icon auf Mobile */}
@@ -114,7 +114,7 @@ export default function Layout() {
                     </Link>
                     <Link
                       to="/register"
-                      className="btn-primary text-sm"
+                      className="btn-primary flex min-h-[44px] items-center justify-center px-4 text-sm"
                       aria-label="Registrieren"
                     >
                       <span className="hidden sm:inline">Registrieren</span>

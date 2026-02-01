@@ -1,0 +1,11 @@
+# robots.txt for Schredder
+# https://dfreilich.github.io/schredder/
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+
+# Sitemap
+Sitemap: https://dfreilich.github.io/schredder/sitemap.xml

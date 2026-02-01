@@ -1,8 +1,8 @@
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useCreateNuggetEntry } from "@/hooks/useNuggetEntries";
 import { useAddEntryModal } from "@/contexts/AddEntryModalContext";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import NuggetEntryForm from "@/components/NuggetEntryForm";
 import type { NuggetEntryFormData } from "@/lib/validations";
 
@@ -10,6 +10,7 @@ export default function AddEntryModal() {
   const { isOpen, closeModal } = useAddEntryModal();
   const { user } = useAuth();
   const createEntry = useCreateNuggetEntry();
+  const containerRef = useFocusTrap(isOpen, closeModal);
 
   const handleSubmit = async (
     data: NuggetEntryFormData & { created_at: string }
@@ -36,15 +37,6 @@ export default function AddEntryModal() {
     }
   };
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, closeModal]);
-
   if (!isOpen) return null;
 
   return (
@@ -56,6 +48,7 @@ export default function AddEntryModal() {
       onClick={closeModal}
     >
       <div
+        ref={containerRef}
         className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const STORAGE_KEY = "schredder_welcome_dismissed";
 
@@ -7,11 +8,16 @@ export default function WelcomeBanner() {
   const [visible, setVisible] = useState(
     () => !localStorage.getItem(STORAGE_KEY)
   );
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleDismiss = () => {
     localStorage.setItem(STORAGE_KEY, "true");
     setVisible(false);
   };
+
+  const containerRef = useFocusTrap(visible, handleDismiss, {
+    initialFocusRef: buttonRef,
+  });
 
   if (!visible) return null;
 
@@ -22,7 +28,10 @@ export default function WelcomeBanner() {
       aria-modal="true"
       aria-labelledby="welcome-banner-title"
     >
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+      <div
+        ref={containerRef}
+        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+      >
         <h2
           id="welcome-banner-title"
           className="text-xl font-semibold text-gray-900"
@@ -96,9 +105,11 @@ export default function WelcomeBanner() {
           </ul>
         </div>
         <button
+          ref={buttonRef}
           type="button"
           onClick={handleDismiss}
           className="mt-6 w-full rounded-lg bg-orange-500 px-4 py-2.5 font-medium text-white transition hover:bg-orange-600"
+          aria-label="Willkommens-Banner schließen"
         >
           Verstanden
         </button>

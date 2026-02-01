@@ -1,5 +1,6 @@
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import InitialsAvatar from "@/components/InitialsAvatar";
+import { LeaderboardSkeleton } from "@/components/Skeleton";
 
 function formatWeight(grams: number): string {
   if (grams >= 1000) return `${(grams / 1000).toFixed(3)} kg`;
@@ -83,11 +84,7 @@ export default function LeaderboardSection() {
         Hier werden anonym die fleißigsten Schredderer gelistet.
       </p>
 
-      {isLoading && (
-        <div className="mt-8 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
-        </div>
-      )}
+      {isLoading && <LeaderboardSkeleton />}
 
       {isError && (
         <p className="mt-8 text-center text-sm text-red-600">

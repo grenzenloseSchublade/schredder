@@ -4,20 +4,101 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Schredder - Eine moderne React-Anwendung" />
-    <title>Schredder</title>
+
+    <!-- SEO Meta Tags -->
+    <title>Schredder - Chicken Nuggets Tracking App</title>
+    <meta
+      name="description"
+      content="Schredder - Tracke deine Chicken Nuggets Vernichtung. Dokumentiere jeden Nugget-Konsum mit Statistiken, Leaderboard und anonymen Rankings. Kostenlos und datenschutzfreundlich."
+    />
+    <meta
+      name="keywords"
+      content="chicken nuggets, tracking, statistik, leaderboard, fast food, nuggets zaehlen, mcdonalds, burger king"
+    />
+    <meta name="author" content="Schredder Team" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://dfreilich.github.io/schredder/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dfreilich.github.io/schredder/" />
+    <meta
+      property="og:title"
+      content="Schredder - Chicken Nuggets Tracking App"
+    />
+    <meta
+      property="og:description"
+      content="Der einzige Nugget Tracker den du brauchst - anonym und kostenlos!"
+    />
+    <meta
+      property="og:image"
+      content="https://dfreilich.github.io/schredder/og-image.svg"
+    />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Schredder" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://dfreilich.github.io/schredder/" />
+    <meta
+      name="twitter:title"
+      content="Schredder - Chicken Nuggets Tracking App"
+    />
+    <meta
+      name="twitter:description"
+      content="Der einzige Nugget Tracker den du brauchst - anonym und kostenlos!"
+    />
+    <meta
+      name="twitter:image"
+      content="https://dfreilich.github.io/schredder/og-image.svg"
+    />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#f97316" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f97316" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Schredder",
+        "description": "Der einzige Nugget Tracker den du brauchst - anonym und kostenlos!",
+        "url": "https://dfreilich.github.io/schredder/",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "Schredder Team"
+        },
+        "inLanguage": "de-DE",
+        "isAccessibleForFree": true
+      }
+    </script>
+
     <!-- SPA Redirect Handler for GitHub Pages -->
     <script>
-      (function(l) {
-        if (l.search[1] === '/') {
-          var decoded = l.search.slice(1).split('&').map(function(s) {
-            return s.replace(/~and~/g, '&');
-          }).join('?');
-          window.history.replaceState(null, null,
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            null,
             l.pathname.slice(0, -1) + decoded + l.hash
           );
         }
-      }(window.location));
+      })(window.location);
     </script>
   </head>
   <body>

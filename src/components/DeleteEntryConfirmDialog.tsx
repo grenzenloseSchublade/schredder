@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import type { Tables } from "@/types/database.types";
 
 const CONFIRM_TEXT = "LÖSCHEN";
@@ -16,7 +17,13 @@ export default function DeleteEntryConfirmDialog({
   onCancel,
   isDeleting = false,
 }: DeleteEntryConfirmDialogProps) {
+  // Input State mit key-basiertem Reset (über Parent-Komponente)
   const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isOpen = entry !== null;
+  const containerRef = useFocusTrap(isOpen, onCancel, {
+    initialFocusRef: inputRef,
+  });
 
   if (!entry) return null;
 
@@ -35,8 +42,13 @@ export default function DeleteEntryConfirmDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="delete-dialog-title"
+      onClick={onCancel}
     >
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+      <div
+        ref={containerRef}
+        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2
           id="delete-dialog-title"
           className="text-lg font-semibold text-gray-900"
@@ -50,7 +62,12 @@ export default function DeleteEntryConfirmDialog({
         <p className="mt-4 text-sm text-gray-700">
           Zum Bestätigen bitte <strong>{CONFIRM_TEXT}</strong> eintippen:
         </p>
+        <label htmlFor="delete-confirm-input" className="sr-only">
+          Bestätigungstext eingeben
+        </label>
         <input
+          ref={inputRef}
+          id="delete-confirm-input"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -58,7 +75,11 @@ export default function DeleteEntryConfirmDialog({
           className="input mt-2 w-full font-mono uppercase"
           autoComplete="off"
           disabled={isDeleting}
+          aria-describedby="delete-confirm-hint"
         />
+        <p id="delete-confirm-hint" className="sr-only">
+          Gib LÖSCHEN ein, um den Eintrag zu löschen
+        </p>
         <div className="mt-6 flex gap-3">
           <button
             type="button"

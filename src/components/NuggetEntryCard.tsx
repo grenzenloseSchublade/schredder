@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Tables } from "@/types/database.types";
 
 interface NuggetEntryCardProps {
@@ -26,7 +27,7 @@ function formatRelativeTime(isoString: string): string {
   });
 }
 
-export default function NuggetEntryCard({
+const NuggetEntryCard = memo(function NuggetEntryCard({
   entry,
   onDeleteClick,
   canDelete = false,
@@ -111,4 +112,6 @@ export default function NuggetEntryCard({
       </div>
     </div>
   );
-}
+});
+
+export default NuggetEntryCard;
