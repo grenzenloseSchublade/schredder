@@ -27,7 +27,7 @@ export const registerSchema = z
     nickname: z
       .string()
       .min(2, "Spitzname muss mindestens 2 Zeichen lang sein")
-      .max(20, "Spitzname darf maximal 20 Zeichen lang sein")
+      .max(30, "Spitzname darf maximal 30 Zeichen lang sein")
       .regex(
         /^[a-zA-Z0-9äöüÄÖÜß\s]+$/,
         "Nur Buchstaben, Zahlen und Leerzeichen erlaubt"

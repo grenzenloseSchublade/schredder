@@ -13,6 +13,25 @@ const COLUMN_TOOLTIPS = {
   weight: "Geschätztes Gesamtgewicht bei 17 g pro Nugget (Gramm-genau)",
 } as const;
 
+function ExpandableName({ name }: { name: string }) {
+  const isLong = name.length > 18;
+
+  if (!isLong) {
+    return <span className="font-medium text-gray-900">{name}</span>;
+  }
+
+  return (
+    <span className="group relative block">
+      <span className="block truncate font-medium text-gray-900 group-hover:invisible">
+        {name}
+      </span>
+      <span className="invisible absolute left-0 top-1/2 z-10 -translate-y-1/2 whitespace-nowrap rounded-md bg-white px-2 py-1 font-medium text-gray-900 shadow-lg ring-1 ring-gray-200 group-hover:visible">
+        {name}
+      </span>
+    </span>
+  );
+}
+
 function ColumnHeaderWithTooltip({
   label,
   tooltip,
@@ -100,7 +119,7 @@ export default function LeaderboardSection() {
                     color={entry.avatar_color ?? "orange"}
                     size="md"
                   />
-                  <span className="min-w-0 flex-1 truncate font-medium text-gray-900">
+                  <span className="min-w-0 flex-1 break-words font-medium text-gray-900">
                     {entry.nickname ?? "Anonym"}
                   </span>
                 </div>
@@ -138,14 +157,14 @@ export default function LeaderboardSection() {
           <div className="mt-8 hidden overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200/80 md:block">
             <div className="overflow-x-auto">
               <table
-                className="w-full min-w-[320px] table-fixed border-collapse"
+                className="w-full min-w-[600px] border-collapse"
                 role="grid"
               >
                 <thead>
                   <tr className="text-xs font-medium uppercase tracking-wide text-gray-500">
-                    <th className="px-3 py-3 text-center">#</th>
-                    <th className="px-3 py-3" aria-hidden />
-                    <th className="px-3 py-3 text-left">Name</th>
+                    <th className="w-16 px-3 py-3 text-center">#</th>
+                    <th className="w-14 px-3 py-3" aria-hidden />
+                    <th className="min-w-[180px] px-3 py-3 text-left">Name</th>
                     <th className="min-w-[5rem] px-3 py-3 text-right">
                       <ColumnHeaderWithTooltip
                         label="Total"
@@ -190,8 +209,8 @@ export default function LeaderboardSection() {
                           size="md"
                         />
                       </td>
-                      <td className="max-w-0 truncate px-3 py-3 font-medium text-gray-900">
-                        {entry.nickname ?? "Anonym"}
+                      <td className="max-w-[180px] px-3 py-3">
+                        <ExpandableName name={entry.nickname ?? "Anonym"} />
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums">
                         <span className="font-semibold text-orange-600">
