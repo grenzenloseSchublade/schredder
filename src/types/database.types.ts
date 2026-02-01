@@ -90,6 +90,7 @@ export type Database = {
           nuggets_last_14_days: number | null;
           rank: number | null;
           total_nuggets: number | null;
+          total_weight_grams: number | null;
         };
         Relationships: [];
       };

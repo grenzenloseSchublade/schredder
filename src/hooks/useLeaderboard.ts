@@ -16,6 +16,7 @@ const DEMO_LEADERBOARD: LeaderboardRow[] = [
     total_nuggets: 127,
     avg_per_day: 12.7,
     nuggets_last_14_days: 45,
+    total_weight_grams: 2159,
   },
   {
     rank: 2,
@@ -24,6 +25,7 @@ const DEMO_LEADERBOARD: LeaderboardRow[] = [
     total_nuggets: 89,
     avg_per_day: 8.1,
     nuggets_last_14_days: 22,
+    total_weight_grams: 1513,
   },
 ];
 
@@ -36,7 +38,7 @@ export function useLeaderboard() {
       const { data, error } = await supabase
         .from("nugget_leaderboard")
         .select(
-          "rank, nickname, avatar_color, total_nuggets, avg_per_day, nuggets_last_14_days"
+          "rank, nickname, avatar_color, total_nuggets, avg_per_day, nuggets_last_14_days, total_weight_grams"
         )
         .order("rank", { ascending: true });
 

@@ -22,11 +22,12 @@ Die App läuft unter: [http://localhost:5173/schredder/](http://localhost:5173/s
 
 ## TODO
 
-- [ ] User testen lassen -> UI komplettt anpassen
+- [ ] User testen lassen -> UI anpassen, UX >
 - [x] Kuule und verstörende Infos über Nuggets (Gewicht pro Kücken, etc)
 - [x] Rangliste für mehrere User (wie viel Nugget haben sie geschredded?)
 - [ ] About Seite -> Warum gibt es die Seite überhaupt?
 - [ ] Grafiken / Animationen erstellen lassen & hinzufügen 
+- [ ] Funktionalität erweitern auf Tenders, Wings, etc. 
 
 
 ## Tech Stack
