@@ -6,6 +6,7 @@ import FunFactsBar from "@/components/FunFactsBar";
 import FloatingAddButton from "@/components/FloatingAddButton";
 import AddEntryModal from "@/components/AddEntryModal";
 import WelcomeBanner from "@/components/WelcomeBanner";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export default function Layout() {
   const { user, signOut, loading, isDemoMode } = useAuth();
@@ -17,6 +18,7 @@ export default function Layout() {
 
   return (
     <AddEntryModalProvider>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col pb-14">
         {/* Demo Banner */}
         {isDemoMode && (
@@ -45,6 +47,29 @@ export default function Layout() {
               </div>
 
               <div className="flex items-center gap-4">
+                {/* About-Link - immer sichtbar */}
+                <Link
+                  to="/about"
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-lg px-2 text-gray-700 transition hover:bg-gray-100 hover:text-orange-600 sm:px-3"
+                  aria-label="Über uns"
+                >
+                  {/* Info-Icon auf Mobile */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="h-5 w-5 sm:hidden"
+                    aria-hidden
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span className="hidden sm:inline">Über uns</span>
+                </Link>
+
                 {loading ? (
                   <div className="h-5 w-5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent"></div>
                 ) : user ? (

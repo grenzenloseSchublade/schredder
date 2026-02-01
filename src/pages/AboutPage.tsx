@@ -22,14 +22,21 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold text-gray-900">Motivation</h2>
           <div className="mt-4 space-y-4 text-gray-600">
             <p>
-              {/* PLATZHALTER: Hier die eigene Motivation einfügen */}
-              [Hier kann die persönliche Motivation beschrieben werden, warum
-              diese Seite entstanden ist. Was war der Auslöser? Gab es ein
-              bestimmtes Ereignis oder eine Idee, die zur Entwicklung führte?]
+              In Zeiten des globalen Veganismus gibt es eine kleine Gruppe
+              Aufständiger. Sie bäumen sich standhaft gegen das System. Während
+              die Welt zu Tofu und Quinoa greift, halten sie die Fahne des
+              knusprig panierten Widerstands hoch.
             </p>
             <p>
-              [Weitere Details zur Entstehungsgeschichte können hier ergänzt
-              werden.]
+              <strong>Schredder3000</strong> – so lautete der interne Codename –
+              entstand aus einer simplen Frage: Wie viele Nuggets kann ein
+              Mensch eigentlich vernichten? Und vor allem: Wer zählt mit?
+            </p>
+            <p>
+              Was als absurde Idee unter Freunden begann, wurde zur Mission.
+              Denn jeder Nugget verdient es, dokumentiert zu werden. Jede Sauce
+              hat ihre Geschichte. Und jeder Schredderer verdient seinen Platz
+              in der Rangliste.
             </p>
           </div>
         </section>
@@ -106,6 +113,11 @@ export default function AboutPage() {
               <li>
                 <strong>Keine Weitergabe:</strong> Deine Daten werden nicht an
                 Dritte verkauft oder weitergegeben.
+              </li>
+              <li>
+                <strong>Recht auf Löschung:</strong> Du kannst jederzeit die
+                vollständige Löschung deiner Daten beantragen. Erstelle dazu
+                einfach ein Issue auf GitHub oder kontaktiere uns direkt.
               </li>
             </ul>
           </div>

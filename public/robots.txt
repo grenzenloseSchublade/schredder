@@ -1,5 +1,5 @@
 # robots.txt for Schredder
-# https://dfreilich.github.io/schredder/
+# https://grenzenloseschublade.github.io/schredder/
 
 User-agent: *
 Allow: /
@@ -8,4 +8,4 @@ Disallow: /login
 Disallow: /register
 
 # Sitemap
-Sitemap: https://dfreilich.github.io/schredder/sitemap.xml
+Sitemap: https://grenzenloseschublade.github.io/schredder/sitemap.xml
