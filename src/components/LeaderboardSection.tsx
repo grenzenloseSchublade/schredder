@@ -38,32 +38,52 @@ export default function LeaderboardSection() {
       )}
 
       {!isLoading && !isError && entries.length > 0 && (
-        <ul className="mt-8 space-y-3" role="list">
-          {entries.map((entry) => (
-            <li
-              key={`${entry.rank}-${entry.nickname}`}
-              className="flex items-center gap-4 rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-gray-200/80 transition hover:ring-orange-200"
-            >
-              <span
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-700"
-                aria-hidden
+        <div className="mt-8">
+          {/* Header nur auf Desktop */}
+          <div className="mb-2 hidden grid-cols-[auto_auto_1fr_auto_auto_auto] gap-4 px-4 text-xs font-medium uppercase tracking-wide text-gray-500 md:grid">
+            <span className="w-9" />
+            <span className="w-10" />
+            <span>Name</span>
+            <span className="text-right">Total</span>
+            <span className="text-right">Ø/Tag</span>
+            <span className="text-right">14 Tage</span>
+          </div>
+          <ul className="space-y-3" role="list">
+            {entries.map((entry) => (
+              <li
+                key={`${entry.rank}-${entry.nickname}`}
+                className="grid grid-cols-[auto_auto_1fr_auto] items-center gap-4 rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-gray-200/80 transition hover:ring-orange-200 md:grid-cols-[auto_auto_1fr_auto_auto_auto]"
               >
-                {entry.rank}.
-              </span>
-              <InitialsAvatar
-                nickname={entry.nickname ?? "Anonym"}
-                color={entry.avatar_color ?? "orange"}
-                size="md"
-              />
-              <span className="min-w-0 flex-1 truncate font-medium text-gray-900">
-                {entry.nickname ?? "Anonym"}
-              </span>
-              <span className="shrink-0 text-right text-lg font-semibold text-orange-600">
-                {entry.total_nuggets} Nuggets
-              </span>
-            </li>
-          ))}
-        </ul>
+                <span
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-700"
+                  aria-hidden
+                >
+                  {entry.rank}.
+                </span>
+                <InitialsAvatar
+                  nickname={entry.nickname ?? "Anonym"}
+                  color={entry.avatar_color ?? "orange"}
+                  size="md"
+                />
+                <span className="min-w-0 truncate font-medium text-gray-900">
+                  {entry.nickname ?? "Anonym"}
+                </span>
+                <span className="shrink-0 text-right text-lg font-semibold text-orange-600">
+                  {entry.total_nuggets}
+                  <span className="ml-1 text-sm font-normal text-gray-500 md:hidden">
+                    Nuggets
+                  </span>
+                </span>
+                <span className="hidden shrink-0 text-right text-gray-600 md:block">
+                  {Number(entry.avg_per_day).toFixed(1)}
+                </span>
+                <span className="hidden shrink-0 text-right text-gray-600 md:block">
+                  {entry.nuggets_last_14_days}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </section>
   );

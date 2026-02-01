@@ -85,7 +85,9 @@ export type Database = {
       nugget_leaderboard: {
         Row: {
           avatar_color: string | null;
+          avg_per_day: number | null;
           nickname: string | null;
+          nuggets_last_14_days: number | null;
           rank: number | null;
           total_nuggets: number | null;
         };

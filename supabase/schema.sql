@@ -171,16 +171,25 @@ create policy "Users can delete own entries"
 create or replace view public.nugget_leaderboard
 with (security_invoker = false)
 as
-select rank, nickname, avatar_color, total_nuggets
+select rank, nickname, avatar_color, total_nuggets, avg_per_day, nuggets_last_14_days
 from (
   select
-    rank() over (order by coalesce(t.total_nuggets, 0) desc)::integer as rank,
+    rank() over (
+      order by coalesce(t.total_nuggets, 0) desc,
+               coalesce(t.nuggets_last_14_days, 0) desc
+    )::integer as rank,
     coalesce(nullif(trim(p.nickname), ''), 'Anonym') as nickname,
     p.avatar_color,
-    coalesce(t.total_nuggets, 0)::bigint as total_nuggets
+    coalesce(t.total_nuggets, 0)::bigint as total_nuggets,
+    coalesce(t.avg_per_day, 0)::numeric(10,1) as avg_per_day,
+    coalesce(t.nuggets_last_14_days, 0)::bigint as nuggets_last_14_days
   from public.profiles p
   left join (
-    select user_id, sum(count) as total_nuggets
+    select
+      user_id,
+      sum(count) as total_nuggets,
+      round(sum(count)::numeric / nullif(count(distinct (created_at::date)), 0), 1) as avg_per_day,
+      sum(count) filter (where created_at >= now() - interval '14 days') as nuggets_last_14_days
     from public.nugget_entries
     group by user_id
   ) t on t.user_id = p.id
