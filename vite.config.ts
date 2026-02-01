@@ -7,6 +7,9 @@ import { resolve } from "path";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "/schredder/",
+  build: {
+    chunkSizeWarningLimit: 700,
+  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),

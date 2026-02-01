@@ -1,14 +1,42 @@
 -- =============================================================================
 -- Supabase Schema: Schredder
 -- =============================================================================
--- Wo ausführen: Supabase Dashboard → SQL Editor → New query → Skript einfügen → Run
 --
--- • Neues Projekt: Führe TEIL 1 (Vollständiges Setup) aus.
--- • Bestehendes Projekt (profiles existiert schon): Führe nur TEIL 2 (Erweiterung) aus.
+-- WO AUSFÜHREN:
+--   Supabase Dashboard → SQL Editor → New query → gewünschten Block markieren → Run
+--
+-- WELCHEN TEIL WANN AUSFÜHREN:
+--
+--   TEIL 1 – Vollständiges Setup
+--     Wann:  Brandneues Supabase-Projekt, noch keine profiles- oder nugget_entries-Tabelle
+--     Was:   Legt profiles, nugget_entries, RLS-Policies und den Registrierungs-Trigger an
+--     Hinweis: Kann mehrfach ausgeführt werden (idempotent)
+--
+--   TEIL 2 – Nur Erweiterung
+--     Wann:  Du hast früher eine ältere Version ausgeführt (profiles ohne nickname/avatar_color,
+--            ohne nugget_entries, oder mit alter handle_new_user-Funktion)
+--     Was:   Ergänzt nickname/avatar_color in profiles, aktualisiert handle_new_user,
+--            legt nugget_entries an falls noch nicht vorhanden
+--     Hinweis: Überspringen, wenn du TEIL 1 bereits ausgeführt hast
+--
+--   TEIL 3 – Leaderboard-View
+--     Wann:  Immer – erforderlich für das Ranking auf der Startseite (Top 10 Nugget-Shredder)
+--     Was:   Erstellt die View nugget_leaderboard mit aggregierten Statistiken,
+--            Lesezugriff für alle (auch nicht eingeloggte Besucher)
+--     Hinweis: Nach TEIL 1 oder TEIL 2 ausführen
+--
+--   TEIL 4 – Migration sauce → sauces
+--     Wann:  Nur wenn nugget_entries noch die alte Spalte "sauce" (einzelne Sauce) hat
+--     Was:   Wandelt sauce (text) in sauces (text[]) um, migriert bestehende Daten
+--     Hinweis: Bei neuem Setup (TEIL 1) überflüssig; schadet nicht bei erneutem Ausführen
+--
 -- =============================================================================
 
 -- =============================================================================
--- TEIL 1 – Vollständiges Setup (nur bei neuem Projekt ausführen)
+-- TEIL 1 – Vollständiges Setup
+-- =============================================================================
+-- Für brandneue Supabase-Projekte. Legt profiles, nugget_entries, RLS und Trigger an.
+-- Idempotent: Kann bei Bedarf erneut ausgeführt werden.
 -- =============================================================================
 
 create table if not exists public.profiles (
@@ -92,10 +120,11 @@ create policy "Users can delete own entries"
 
 
 -- =============================================================================
--- TEIL 2 – Nur Erweiterung (wenn profiles-Tabelle schon existiert)
+-- TEIL 2 – Nur Erweiterung
 -- =============================================================================
--- Führe nur diesen Block aus, wenn du bereits das alte Schema (ohne nugget_entries,
--- ohne nickname/avatar_color, alter handle_new_user) ausgeführt hast.
+-- Für bestehende Projekte mit älterem Schema (profiles ohne nickname/avatar_color,
+-- ohne nugget_entries oder mit veralteter handle_new_user-Funktion).
+-- Überspringen, wenn TEIL 1 bereits vollständig ausgeführt wurde.
 -- =============================================================================
 
 -- Neue Spalten in profiles (ignoriert Fehler, falls Spalten schon existieren)
@@ -171,9 +200,12 @@ create policy "Users can delete own entries"
   using (auth.uid() = user_id);
 
 -- =============================================================================
--- TEIL 3 – Leaderboard-View (Top 10 Nugget-Shredder, anonymisiert)
+-- TEIL 3 – Leaderboard-View
 -- =============================================================================
--- Führe nach TEIL 1 oder TEIL 2 aus. Ermöglicht Lesezugriff für alle (anon + authenticated).
+-- Erforderlich für das Ranking auf der Startseite. Erstellt die View nugget_leaderboard
+-- mit Top 10, Durchschnitt pro Tag, Nuggets der letzten 14 Tage und Gesamtgewicht.
+-- Lesezugriff für alle (auch Gäste). Nach TEIL 1 oder TEIL 2 ausführen.
+-- =============================================================================
 
 create or replace view public.nugget_leaderboard
 with (security_invoker = false)
@@ -211,9 +243,12 @@ order by rank;
 grant select on public.nugget_leaderboard to anon, authenticated;
 
 -- =============================================================================
--- TEIL 4 – Migration: sauce (text) zu sauces (text[])
+-- TEIL 4 – Migration sauce → sauces
 -- =============================================================================
--- Führe aus, wenn nugget_entries noch die alte Spalte "sauce" hat.
+-- Nur für bestehende Projekte mit der alten Spalte "sauce" (einzelne Sauce).
+-- Migriert zu sauces (text[]). Bei neuem Setup überflüssig; bei erneutem
+-- Ausführen wird geprüft, ob sauce existiert – falls nicht, passiert nichts.
+-- =============================================================================
 
 do $$
 begin
