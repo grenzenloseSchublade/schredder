@@ -9,8 +9,12 @@ vi.mock("@/hooks/useAuth", () => ({
     user: null,
     loading: false,
     signOut: vi.fn(),
+    isDemoMode: false,
   }),
 }));
+
+vi.mock("@/components/FloatingAddButton", () => ({ default: () => null }));
+vi.mock("@/components/AddEntryModal", () => ({ default: () => null }));
 
 describe("Layout", () => {
   it("renders the header with logo", () => {

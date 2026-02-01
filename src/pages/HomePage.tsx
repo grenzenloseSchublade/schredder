@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useAddEntryModal } from "@/contexts/AddEntryModalContext";
 import LeaderboardSection from "@/components/LeaderboardSection";
 
 export default function HomePage() {
   const { user } = useAuth();
+  const { openModal } = useAddEntryModal();
 
   return (
     <div className="flex flex-col">
@@ -24,12 +26,21 @@ export default function HomePage() {
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               {user ? (
-                <Link
-                  to="/dashboard"
-                  className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-3 text-lg font-semibold text-orange-600 shadow-lg transition hover:bg-orange-50 hover:shadow-xl"
-                >
-                  Zum Dashboard
-                </Link>
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-3 text-lg font-semibold text-orange-600 shadow-lg transition hover:bg-orange-50 hover:shadow-xl"
+                  >
+                    Zum Dashboard
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={openModal}
+                    className="inline-flex items-center justify-center rounded-xl border-2 border-white/30 bg-white/10 px-8 py-3 text-lg font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                  >
+                    Neuer Eintrag
+                  </button>
+                </>
               ) : (
                 <>
                   <Link

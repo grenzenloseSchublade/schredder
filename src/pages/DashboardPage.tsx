@@ -123,6 +123,25 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Neuer Eintrag */}
+        <div className="mb-8">
+          {showForm ? (
+            <NuggetEntryForm
+              onSubmit={handleCreateEntry}
+              isSubmitting={createEntry.isPending}
+              onCancel={() => setShowForm(false)}
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="w-full rounded-xl border-2 border-dashed border-orange-300 bg-orange-50/50 px-6 py-4 text-base font-medium text-orange-700 transition hover:border-orange-400 hover:bg-orange-50"
+            >
+              + Eintrag hinzufügen
+            </button>
+          )}
+        </div>
+
         {/* Stats Grid */}
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200/50 transition hover:shadow-xl">
@@ -153,25 +172,6 @@ export default function DashboardPage() {
             </div>
             <div className="text-sm text-gray-600">Einträge</div>
           </div>
-        </div>
-
-        {/* Neuer Eintrag */}
-        <div className="mb-8">
-          {showForm ? (
-            <NuggetEntryForm
-              onSubmit={handleCreateEntry}
-              isSubmitting={createEntry.isPending}
-              onCancel={() => setShowForm(false)}
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setShowForm(true)}
-              className="w-full rounded-xl border-2 border-dashed border-orange-300 bg-orange-50/50 px-6 py-4 text-base font-medium text-orange-700 transition hover:border-orange-400 hover:bg-orange-50"
-            >
-              + Eintrag hinzufügen
-            </button>
-          )}
         </div>
 
         {/* Einträge-Liste */}
