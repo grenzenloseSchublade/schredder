@@ -28,6 +28,7 @@ export function AddEntryModalProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- Hook gehört zum Context-Pattern
 export function useAddEntryModal() {
   const ctx = useContext(AddEntryModalContext);
   if (!ctx) {

@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useCreateNuggetEntry } from "@/hooks/useNuggetEntries";
@@ -11,46 +11,40 @@ export default function AddEntryModal() {
   const { user } = useAuth();
   const createEntry = useCreateNuggetEntry();
 
-  const handleSubmit = useCallback(
-    async (data: NuggetEntryFormData & { created_at: string }) => {
-      if (!user?.id) return;
-      try {
-        await createEntry.mutateAsync({
-          user_id: user.id,
-          count: data.count,
-          sauces: data.sauces ?? [],
-          location: data.location || null,
-          mood: data.mood || null,
-          notes: data.notes || null,
-          created_at: data.created_at,
-        });
-        toast.success("Eintrag gespeichert!", {
-          description: `${data.count} Nuggets wurden hinzugefügt.`,
-        });
-        closeModal();
-      } catch (err) {
-        toast.error("Fehler beim Speichern", {
-          description:
-            err instanceof Error ? err.message : "Unbekannter Fehler",
-        });
-      }
-    },
-    [user?.id, createEntry, closeModal]
-  );
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
-    },
-    [closeModal]
-  );
+  const handleSubmit = async (
+    data: NuggetEntryFormData & { created_at: string }
+  ) => {
+    if (!user?.id) return;
+    try {
+      await createEntry.mutateAsync({
+        user_id: user.id,
+        count: data.count,
+        sauces: data.sauces ?? [],
+        location: data.location || null,
+        mood: data.mood || null,
+        notes: data.notes || null,
+        created_at: data.created_at,
+      });
+      toast.success("Eintrag gespeichert!", {
+        description: `${data.count} Nuggets wurden hinzugefügt.`,
+      });
+      closeModal();
+    } catch (err) {
+      toast.error("Fehler beim Speichern", {
+        description:
+          err instanceof Error ? err.message : "Unbekannter Fehler",
+      });
+    }
+  };
 
   useEffect(() => {
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    }
-  }, [isOpen, handleKeyDown]);
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, closeModal]);
 
   if (!isOpen) return null;
 
