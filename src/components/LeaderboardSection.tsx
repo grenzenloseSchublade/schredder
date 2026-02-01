@@ -2,8 +2,48 @@ import { useLeaderboard } from "@/hooks/useLeaderboard";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
 function formatWeight(grams: number): string {
-  if (grams >= 1000) return `${(grams / 1000).toFixed(1)} kg`;
+  if (grams >= 1000) return `${(grams / 1000).toFixed(3)} kg`;
   return `${grams} g`;
+}
+
+const COLUMN_TOOLTIPS = {
+  total: "Gesamtzahl der gegessenen Nuggets",
+  avgPerDay: "Durchschnittliche Nuggets pro Tag seit erstem Eintrag",
+  last14Days: "Nuggets der letzten 2 Wochen (bei Gleichstand entscheidend)",
+  weight: "Geschätztes Gesamtgewicht bei 17 g pro Nugget (Gramm-genau)",
+} as const;
+
+function ColumnHeaderWithTooltip({
+  label,
+  tooltip,
+}: {
+  label: string;
+  tooltip: string;
+}) {
+  return (
+    <span className="inline-flex items-center justify-end gap-1">
+      <span>{label}</span>
+      <abbr
+        title={tooltip}
+        className="cursor-help no-underline"
+        aria-label={tooltip}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          className="h-4 w-4 shrink-0 text-gray-400"
+          aria-hidden
+        >
+          <path
+            fillRule="evenodd"
+            d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0Zm-7-4a.75.75 0 0 1 .75.75v2.5h2.5a.75.75 0 0 1 0 1.5h-3.25V4.75A.75.75 0 0 1 8 4Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </abbr>
+    </span>
+  );
 }
 
 export default function LeaderboardSection() {
@@ -45,21 +85,38 @@ export default function LeaderboardSection() {
       {!isLoading && !isError && entries.length > 0 && (
         <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200/80">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[320px] border-collapse" role="grid">
+            <table
+              className="w-full min-w-[320px] table-fixed border-collapse"
+              role="grid"
+            >
               <thead>
-                <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                  <th className="w-10 py-3 pl-4 pr-2 text-center">#</th>
-                  <th className="w-12 py-3 pr-2" aria-hidden />
-                  <th className="py-3 pr-4">Name</th>
-                  <th className="w-20 py-3 pr-4 text-right">Total</th>
-                  <th className="hidden w-20 py-3 text-right md:table-cell">
-                    Ø/Tag
+                <tr className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                  <th className="px-3 py-3 text-center">#</th>
+                  <th className="px-3 py-3" aria-hidden />
+                  <th className="px-3 py-3 text-left">Name</th>
+                  <th className="min-w-[5rem] px-3 py-3 text-right">
+                    <ColumnHeaderWithTooltip
+                      label="Total"
+                      tooltip={COLUMN_TOOLTIPS.total}
+                    />
                   </th>
-                  <th className="hidden w-20 py-3 text-right md:table-cell">
-                    14 Tage
+                  <th className="hidden min-w-[5rem] px-3 py-3 text-right md:table-cell">
+                    <ColumnHeaderWithTooltip
+                      label="Ø/Tag"
+                      tooltip={COLUMN_TOOLTIPS.avgPerDay}
+                    />
                   </th>
-                  <th className="hidden w-24 py-3 pr-4 text-right md:table-cell">
-                    Gewicht
+                  <th className="hidden min-w-[5rem] px-3 py-3 text-right md:table-cell">
+                    <ColumnHeaderWithTooltip
+                      label="14 Tage"
+                      tooltip={COLUMN_TOOLTIPS.last14Days}
+                    />
+                  </th>
+                  <th className="hidden min-w-[5.5rem] px-3 py-3 text-right md:table-cell">
+                    <ColumnHeaderWithTooltip
+                      label="Gewicht"
+                      tooltip={COLUMN_TOOLTIPS.weight}
+                    />
                   </th>
                 </tr>
               </thead>
@@ -69,22 +126,22 @@ export default function LeaderboardSection() {
                     key={`${entry.rank}-${entry.nickname}`}
                     className="border-t border-gray-200/80 transition hover:bg-gray-50/50"
                   >
-                    <td className="py-3 pl-4 pr-2 text-center">
-                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-700">
+                    <td className="px-3 py-3 text-center">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-700 tabular-nums">
                         {entry.rank}
                       </span>
                     </td>
-                    <td className="py-3 pr-2">
+                    <td className="px-3 py-3">
                       <InitialsAvatar
                         nickname={entry.nickname ?? "Anonym"}
                         color={entry.avatar_color ?? "orange"}
                         size="md"
                       />
                     </td>
-                    <td className="max-w-[120px] truncate py-3 pr-4 font-medium text-gray-900 sm:max-w-none">
+                    <td className="max-w-0 truncate px-3 py-3 font-medium text-gray-900">
                       {entry.nickname ?? "Anonym"}
                     </td>
-                    <td className="py-3 pr-4 text-right">
+                    <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums">
                       <span className="font-semibold text-orange-600">
                         {entry.total_nuggets}
                       </span>
@@ -92,13 +149,13 @@ export default function LeaderboardSection() {
                         Nuggets
                       </span>
                     </td>
-                    <td className="hidden py-3 pr-4 text-right text-gray-600 md:table-cell">
+                    <td className="hidden whitespace-nowrap px-3 py-3 text-right text-gray-600 tabular-nums md:table-cell">
                       {Number(entry.avg_per_day ?? 0).toFixed(1)}
                     </td>
-                    <td className="hidden py-3 pr-4 text-right text-gray-600 md:table-cell">
+                    <td className="hidden whitespace-nowrap px-3 py-3 text-right text-gray-600 tabular-nums md:table-cell">
                       {entry.nuggets_last_14_days ?? 0}
                     </td>
-                    <td className="hidden py-3 pr-4 text-right text-gray-600 md:table-cell">
+                    <td className="hidden whitespace-nowrap px-3 py-3 text-right text-gray-600 tabular-nums md:table-cell">
                       {formatWeight(entry.total_weight_grams ?? 0)}
                     </td>
                   </tr>
